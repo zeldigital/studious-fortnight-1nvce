@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Invoice Builder</h1>
+    <form id="invoice-form">
+        <label for="from">From:</label>
+        <textarea id="from" placeholder="Your Name, Address, etc."></textarea>
+
+        <label for="to">To:</label>
+        <textarea id="to" placeholder="Client Name, Address, etc."></textarea>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date">
+
+        <label for="items">Items (Format: Description, Quantity, Price):</label>
+        <textarea id="items" placeholder="Item 1, 1, 100\nItem 2, 2, 150"></textarea>
+
+        <button type="button" onclick="generateInvoice()">Generate Invoice</button>
+    </form>
+
+    <div id="invoice-preview" class="invoice-preview"></div>
+    <button type="button" onclick="previewPDF()">Preview PDF</button>
+    <button type="button" onclick="downloadPDF()">Download PDF</button>
+
+    <iframe id="pdf-preview" class="pdf-preview"></iframe>
+</div>
+
+</body>
+</html>
