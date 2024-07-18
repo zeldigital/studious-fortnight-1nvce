@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Builder</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .invoice-preview {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -29,11 +52,50 @@
     </form>
 
     <div id="invoice-preview" class="invoice-preview"></div>
-    <button type="button" onclick="previewPDF()">Preview PDF</button>
     <button type="button" onclick="downloadPDF()">Download PDF</button>
-
-    <iframe id="pdf-preview" class="pdf-preview"></iframe>
 </div>
+
+<script>
+    function generateInvoice() {
+        const from = document.getElementById('from').value;
+        const to = document.getElementById('to').value;
+        const date = document.getElementById('date').value;
+        const items = document.getElementById('items').value.split('\n');
+        
+        let itemList = '';
+        let total = 0;
+
+        items.forEach(item => {
+            const [description, quantity, price] = item.split(',');
+            const itemTotal = parseFloat(quantity) * parseFloat(price);
+            total += itemTotal;
+            itemList += `<p>${description.trim()} - ${quantity.trim()} x ${price.trim()} = ${itemTotal.toFixed(2)}</p>`;
+        });
+
+        document.getElementById('invoice-preview').innerHTML = `
+            <h2>Invoice</h2>
+            <p><strong>From:</strong> ${from}</p>
+            <p><strong>To:</strong> ${to}</p>
+            <p><strong>Date:</strong> ${date}</p>
+            <h3>Items</h3>
+            ${itemList}
+            <h3>Total: ${total.toFixed(2)}</h3>
+        `;
+    }
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.html(document.getElementById('invoice-preview'), {
+            callback: function (doc) {
+                doc.save('invoice.pdf');
+            },
+            x: 10,
+            y: 10
+        });
+    }
+</script>
 
 </body>
 </html>
